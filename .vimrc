@@ -25,16 +25,25 @@ Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-surround'
 Plug 'bling/vim-airline'
+Plug 'vim-ruby/vim-ruby'
+Plug 'kana/vim-textobj-user'
+Plug 'rhysd/vim-textobj-ruby'
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-rake'
 Plug 'bronson/vim-trailing-whitespace'
-Plug 'ap/vim-buftabline'
 Plug 'dyng/ctrlsf.vim'
+Plug 'scrooloose/nerdcommenter'
+Plug 'zefei/vim-wintabs'
+Plug 'zefei/vim-wintabs-powerline'
+Plug 'jiangmiao/auto-pairs'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-obsession'
 " Initialize plugin system
 call plug#end()
 
 " ================ General Config ====================
 
+" execute pathogen#infect()
 set number                      "Line numbers are good
 set backspace=indent,eol,start  "Allow backspace in insert mode
 set history=1000                "Store lots of :cmdline history
@@ -63,6 +72,9 @@ syntax on
 " the plugins.
 let mapleader=","
 set timeout timeoutlen=1500
+
+" search first in current directory then file directory for tag file
+set tags=tags,./tags
 
 " ================ Turn Off Swap Files ==============
 
@@ -99,8 +111,6 @@ set hlsearch        " Highlight searches by default
 set ignorecase      " Ignore case when searching...
 set smartcase       " ...unless we type a capital
 
-let g:ctrlp_max_files = 0
-let g:ctrlp_max_depth = 100
 " ================ Indentation ======================
 
 set autoindent
@@ -155,8 +165,8 @@ nmap <leader>m A # => <Esc>
 "
 vmap <leader>m :norm A # => <Esc>
 
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+nnoremap <leader>nt :NERDTreeToggle<CR>
+
 
 map <Leader>y "+y
 map <Leader>d "+d
@@ -187,3 +197,5 @@ nnoremap <leader>r :RunSpec<CR>
 nnoremap <leader>l :RunSpecLine<CR>
 nnoremap <leader>e :RunSpecLastRun<CR>
 nnoremap <leader>cr :RunSpecCloseResult<CR>
+
+"nnoremap <leader>ws :ToggleWorkspace<CR>
