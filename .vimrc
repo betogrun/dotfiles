@@ -38,6 +38,10 @@ Plug 'zefei/vim-wintabs-powerline'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-obsession'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'christoomey/vim-tmux-runner'
+Plug 'thoughtbot/vim-rspec'
+Plug 'elixir-lang/vim-elixir'
 " Initialize plugin system
 call plug#end()
 
@@ -52,6 +56,9 @@ set showmode                    "Show current mode down the bottom
 set gcr=a:blinkon0              "Disable cursor blink
 set visualbell                  "No sounds
 set autoread                    "Reload files changed outside vim
+
+set splitright
+set splitbelow
 
 set background=dark
 colorscheme gruvbox
@@ -139,23 +146,6 @@ nnoremap <silent> <Leader>] :exe "resize " . (winheight(0) * 2/3)<CR>
 nnoremap <C-N> :bnext<CR>
 nnoremap <C-P> :bprev<CR>
 
-" ===== Seeing Is Believing =====
-" " Assumes you have a Ruby with SiB available in the PATH
-" " If it doesn't work, you may need to `gem install seeing_is_believing -v
-" 3.0.0.beta.6`
-" " ...yeah, current release is a beta, which won't auto-install
-"
-" " Annotate every line
-"
-nmap <leader>b :%!seeing_is_believing --timeout 12 --line-length 500 --number-of-captures 300 --alignment-strategy chunk<CR>;
-"
-"  " Annotate marked lines
-"
-nmap <leader>n :%.!seeing_is_believing --timeout 12 --line-length 500 --number-of-captures 300 --alignment-strategy chunk --xmpfilter-style<CR>;
-"
-"  " Remove annotations
-"
-nmap <leader>c :%.!seeing_is_believing --clean<CR>;
 "
 "  " Mark the current line for annotation
 "
@@ -166,6 +156,7 @@ nmap <leader>m A # => <Esc>
 vmap <leader>m :norm A # => <Esc>
 
 nnoremap <leader>nt :NERDTreeToggle<CR>
+nnoremap <leader>nr :NERDTreeRefreshRoot<CR>
 
 
 map <Leader>y "+y
@@ -198,4 +189,9 @@ nnoremap <leader>l :RunSpecLine<CR>
 nnoremap <leader>e :RunSpecLastRun<CR>
 nnoremap <leader>cr :RunSpecCloseResult<CR>
 
-"nnoremap <leader>ws :ToggleWorkspace<CR>
+" automatically rebalance windows on vim resize
+autocmd VimResized * :wincmd =
+
+" zoom a vim pane, <C-w>= to re-balance
+nnoremap <leader>- :wincmd _<cr>:wincmd \|<cr>
+nnoremap <leader>= :wincmd =<cr>
