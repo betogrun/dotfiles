@@ -1,4 +1,3 @@
-" Use Vim settings, rather then Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
 set nocompatible
 
@@ -48,6 +47,7 @@ call plug#end()
 " ================ General Config ====================
 
 " execute pathogen#infect()
+set clipboard=unnamed
 set number                      "Line numbers are good
 set backspace=indent,eol,start  "Allow backspace in insert mode
 set history=1000                "Store lots of :cmdline history
@@ -157,7 +157,6 @@ vmap <leader>m :norm A # => <Esc>
 
 nnoremap <leader>nt :NERDTreeToggle<CR>
 nnoremap <leader>nr :NERDTreeRefreshRoot<CR>
-
 
 map <Leader>y "+y
 map <Leader>d "+d
