@@ -1,3 +1,4 @@
+" Use Vim settings, rather then Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
 set nocompatible
 
@@ -41,6 +42,9 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'christoomey/vim-tmux-runner'
 Plug 'thoughtbot/vim-rspec'
 Plug 'elixir-lang/vim-elixir'
+Plug 'kchmck/vim-coffee-script'
+Plug 'ngmy/vim-rubocop'
+Plug 'alvan/vim-closetag'
 " Initialize plugin system
 call plug#end()
 
