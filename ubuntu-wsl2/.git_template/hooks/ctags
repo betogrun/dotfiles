@@ -1,0 +1,2 @@
+#!/bin/s
+ctags -R --languages=ruby,javascript,sql --exclude=.git --exclude=log . $(bundle list --paths)

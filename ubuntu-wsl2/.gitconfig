@@ -1,0 +1,8 @@
+[user]
+	email = betogrun@gmail.com
+	name = Alberto Rocha
+[core]
+	editor = vim
+	excludesfile = /home/alberto/.gitignore_global
+[init]
+	templatedir = ~/.git_template
