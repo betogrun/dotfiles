@@ -29,6 +29,8 @@ Plug 'tpope/vim-endwise'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'tpope/vim-obsession'
 Plug 'vim-airline/vim-airline'
+Plug 'brooth/far.vim'
+Plug 'dyng/ctrlsf.vim'
 
 call plug#end()
 
@@ -116,3 +118,26 @@ set guicursor=
 
 " Highlight the currert line on INSERT mode
 :autocmd InsertEnter,InsertLeave * set cul!
+
+
+" CtrlSF setup
+" Use the ack tool as the backend
+let g:ctrlsf_backend='ag'
+" Auto close the results panel when opening a file
+let g:ctrlsf_auto_close={ "normal":0, "compact":0 }
+" Immediately switch focus to the search window
+let g:ctrlsf_auto_focus={ "at":"start" }
+" Don't open the preview window automatically
+let g:ctrlsf_auto_preview=0
+" Use the smart case sensitivity search scheme
+let g:ctrlsf_case_sensitive='smart'
+" Normal mode, not compact mode
+let g:ctrlsf_default_view='normal'
+" Use absoulte search by default
+" let g:ctrlsf_regex_pattern=0;
+" Position of the search window
+let g:ctrlsf_position='right'
+" Width or height of search window
+let g:ctrlsf_winsize='46'
+" Search from the current working directory
+let g:ctrlsf_default_root='cwd'
