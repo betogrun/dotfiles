@@ -33,6 +33,10 @@ Plug 'brooth/far.vim'
 Plug 'dyng/ctrlsf.vim'
 Plug 'kchmck/vim-coffee-script'
 Plug 'arcticicestudio/nord-vim'
+Plug 'github/copilot.vim'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'preservim/vimux'
+Plug 'vim-test/vim-test'
 
 call plug#end()
 
@@ -157,3 +161,30 @@ let g:clipboard = {
     \ 'cache_enabled': 1
     \ }
 
+" Make test commands execute using dispatch.vim
+let test#strategy = "vimux"
+
+nmap <silent> <leader>t :TestNearest<CR>
+nmap <silent> <leader>T :TestFile<CR>
+nmap <silent> <leader>a :TestSuite<CR>
+nmap <silent> <leader>l :TestLast<CR>
+nmap <silent> <leader>v :TestVisit<CR>
+
+" The percent of the screen the split pane Vimux will spawn should take up
+let g:VimuxHeight = "40"
+
+" Close the runner when you quit
+let g:VimuxCloseOnExit = 1
+
+" Open vim tmux pane
+ map <Leader>vo :VimuxOpenRunner<CR>
+" Close vim tmux runner opened by VimuxRunCommand
+ map <Leader>vq :VimuxCloseRunner<CR>
+" Prompt for a command to run
+ map <Leader>vp :VimuxPromptCommand<CR>
+ " Zoom the tmux runner page
+ map <Leader>vz :VimuxZoomRunner<CR>
+ " Interrupt any command running in the runner pane map
+ map <Leader>vs :VimuxInterruptRunner<CR>
+" Inspect runner pane map
+ map <Leader>vi :VimuxInspectRunner<CR>
