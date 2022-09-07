@@ -91,11 +91,25 @@ lvim.builtin.treesitter.ensure_installed = {
   "rust",
   "java",
   "yaml",
-  "ruby"
+  "ruby",
+  "elixir",
 }
 
 lvim.builtin.treesitter.ignore_install = { "haskell" }
 lvim.builtin.treesitter.highlight.enabled = true
+lvim.builtin.treesitter.indent.disable = {
+  "ruby"
+}
+
+local actions = require "telescope.actions"
+lvim.builtin.telescope.defaults.mappings = {
+  i = {
+    ["<C-y>"] = actions.select_vertical
+  },
+  n = {
+    ["<C-y>"] = actions.select_vertical
+  }
+}
 
 -- generic LSP settings
 
@@ -123,6 +137,19 @@ lvim.builtin.treesitter.highlight.enabled = true
 require('lspconfig').solargraph.setup {
   cmd = { "solargraph", "stdio" }
 }
+
+vim.list_extend(lvim.lsp.override, { "tailwindcss" })
+require("lvim.lsp.manager").setup("tailwindcss", {})
+
+require('lspconfig').tsserver.setup {
+  cmd = {"typescript-language-server", "--stdio"},
+}
+-- require('lspconfig').tsserver.setup {
+--   -- This makes sure tsserver is not used for formatting (I prefer prettier)
+--   -- on_attach = require'lsp'.common_on_attach,
+--   settings = {documentFormatting = false}
+-- }
+
 
 -- -- set a formatter, this will override the language server formatting capabilities (if it exists)
 -- local formatters = require "lvim.lsp.null-ls.formatters"
@@ -158,53 +185,55 @@ require('lspconfig').solargraph.setup {
 --   },
 -- }
 
+-- if !empty(glob("docker-compose.yml"))
+--   let test#ruby#rails#executable = 'docker-compose exec -e RAILS_ENV=test web rails test'
+-- end
+
+lvim.builtin.sell_soul_to_devel = true
 -- Additional Plugins
 lvim.plugins = {
-    {"folke/tokyonight.nvim"},
-    {
-      "folke/trouble.nvim",
-      cmd = "TroubleToggle",
-    },
-    {"tpope/vim-endwise" },
-    { "tpope/vim-repeat" },
-    {
-      "simrat39/symbols-outline.nvim",
-      cmd = "SymbolsOutline",
-    },
-    {
-      "tpope/vim-surround",
-      keys = {"c", "d", "y"},
-      config = function ()
-        vim.cmd("nmap ds       <Plug>Dsurround")
-        vim.cmd("nmap cs       <Plug>Csurround")
-        vim.cmd("nmap cS       <Plug>CSurround")
-        vim.cmd("nmap ys       <Plug>Ysurround")
-        vim.cmd("nmap yS       <Plug>YSurround")
-        vim.cmd("nmap yss      <Plug>Yssurround")
-        vim.cmd("nmap ySs      <Plug>YSsurround")
-        vim.cmd("nmap ySS      <Plug>YSsurround")
-        vim.cmd("xmap gs       <Plug>VSurround")
-        vim.cmd("xmap gS       <Plug>VgSurround")
-      end
-    },
-    {
-      "vim-test/vim-test",
-      cmd = { "TestNearest", "TestFile", "TestSuite", "TestLast", "TestVisit" },
-      keys = { "<localleader>tf", "<localleader>tn", "<localleader>ts" },
-      config = function()
-        vim.cmd [[
+  {"folke/tokyonight.nvim"},
+  {
+    "folke/trouble.nvim",
+    cmd = "TroubleToggle",
+  },
+  {"tpope/vim-endwise" },
+  { "tpope/vim-repeat" },
+  {
+    "simrat39/symbols-outline.nvim",
+    cmd = "SymbolsOutline",
+  },
+  {
+    "tpope/vim-surround",
+    keys = {"c", "d", "y"},
+    config = function ()
+      vim.cmd("nmap ds       <Plug>Dsurround")
+      vim.cmd("nmap cs       <Plug>Csurround")
+      vim.cmd("nmap cS       <Plug>CSurround")
+      vim.cmd("nmap ys       <Plug>Ysurround")
+      vim.cmd("nmap yS       <Plug>YSurround")
+      vim.cmd("nmap yss      <Plug>Yssurround")
+      vim.cmd("nmap ySs      <Plug>YSsurround")
+      vim.cmd("nmap ySS      <Plug>YSsurround")
+      vim.cmd("xmap gs       <Plug>VSurround")
+      vim.cmd("xmap gS       <Plug>VgSurround")
+    end
+  },
+  {
+    "vim-test/vim-test",
+    cmd = { "TestNearest", "TestFile", "TestSuite", "TestLast", "TestVisit" },
+    keys = { "<localleader>tf", "<localleader>tn", "<localleader>ts" },
+    config = function()
+      vim.cmd [[
             function! ToggleTermStrategy(cmd) abort
               call luaeval("require('toggleterm').exec(_A[1])", [a:cmd])
             endfunction
-            let g:test#custom_strategies = {'toggleterm': function('ToggleTermStrategy')}
-            if !empty(glob("docker-compose.yml"))
-              let test#ruby#rails#executable = 'docker-compose exec -e RAILS_ENV=test web rails test'
-            end
+            let g:test#custom_strategies = {'toggleterm': function('ToggleTermStrategy')} 
           ]]
-        vim.g["test#strategy"] = "toggleterm"
-      end,
-    },
-    {"p00f/nvim-ts-rainbow"},
+      vim.g["test#strategy"] = "toggleterm"
+    end,
+  },
+  {"p00f/nvim-ts-rainbow"},
   {
     "folke/persistence.nvim",
     event = "BufReadPre", -- this will only start session saving when an actual file was opened
@@ -216,14 +245,109 @@ lvim.plugins = {
       }
     end,
   },
+  -- {"github/copilot.vim"},
+  -- { "zbirenbaum/copilot.lua",
+  --   event = { "VimEnter" },
+  --   config = function()
+  --     vim.defer_fn(function()
+  --       require("copilot").setup {
+  --         plugin_manager_path = get_runtime_dir() .. "/site/pack/packer",
+  --       }
+  --     end, 100)
+  --   end,
+  -- },
+  -- { "zbirenbaum/copilot-cmp",
+  --   after = { "copilot.lua", "nvim-cmp" },
+  -- },
+  -- {
+  --   "gelfand/copilot.vim",
+  --   disable = not lvim.builtin.sell_soul_to_devel,
+  --   config = function ()
+  --     -- copilot assume mapped
+  --     vim.g.copilot_assume_mapped = true
+  --     vim.g.copilot_no_tab_map = true
+  --   end
+  -- },
+  -- {
+  --   "hrsh7th/cmp-copilot",
+  --   disable = not lvim.builtin.sell_soul_to_devel,
+  --   config = function ()
+  --     lvim.builtin.cmp.formatting.source_names["copilot"] = "(Cop)"
+  --     table.insert(lvim.builtin.cmp.sources, {name = "copilot"})
+  --   end
+  -- },
+  {
+    "tpope/vim-fugitive",
+    cmd = {
+      "G",
+      "Git",
+      "Gdiffsplit",
+      "Gread",
+      "Gwrite",
+      "Ggrep",
+      "GMove",
+      "GDelete",
+      "GBrowse",
+      "GRemove",
+      "GRename",
+      "Glgrep",
+      "Gedit"
+    },
+    ft = {"fugitive"}
+  },
+  {
+    "aca/emmet-ls",
+    config = function()
+      local lspconfig = require("lspconfig")
+      local configs = require("lspconfig/configs")
+
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities.textDocument.completion.completionItem.snippetSupport = true
+      capabilities.textDocument.completion.completionItem.resolveSupport = {
+        properties = {
+          "documentation",
+          "detail",
+          "additionalTextEdits",
+        },
+      }
+
+      if not lspconfig.emmet_ls then
+        configs.emmet_ls = {
+          default_config = {
+            cmd = { "emmet-ls", "--stdio" },
+            filetypes = {
+              "html",
+              "css",
+              "javascript",
+              "typescript",
+              "eruby",
+              "typescriptreact",
+              "javascriptreact",
+              "svelte",
+              "vue",
+            },
+            root_dir = function(fname)
+              return vim.loop.cwd()
+            end,
+            settings = {},
+          },
+        }
+      end
+      lspconfig.emmet_ls.setup({ capabilities = capabilities })
+    end,
+  },
 
 }
-
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
 -- lvim.autocommands.custom_groups = {
 --   { "BufWinEnter", "*.lua", "setlocal ts=8 sw=8" },
 -- }
+
+-- Copilot
+vim.g.copilot_node_command = "~/.asdf/installs/nodejs/16.15.0/bin/node"
+lvim.builtin.cmp.formatting.source_names["copilot"] = "(Copilot)"
+table.insert(lvim.builtin.cmp.sources, 1, { name = "copilot" })
 
 -- WSL2 Clipboard
 vim.cmd([[
@@ -240,6 +364,5 @@ vim.cmd([[
       \ 'cache_enabled': 1
       \ }
 ]])
-
 
 
