@@ -7,8 +7,10 @@ echo " | '_ \\ / _ \\ __/ _ \\ / _\` | '__| | | | '_ \\ "
 echo " | |_) |  __/ || (_) | (_| | |  | |_| | | | |"
 echo " |_.__/ \\___|\\__\\___/ \\__, |_|   \\__,_|_| |_|"
 echo "                       __/ |                 "
-echo "                      |___/                  "
 
+#!/bin/bash
+
+# Script Header
 echo "# ___________________________________________"
 echo "# Running betogrun dotfiles bootstrap script"
 echo "# ___________________________________________"
@@ -19,14 +21,32 @@ sudo apt update && sudo apt upgrade -y
 
 # Install necessary applications
 echo "Installing necessary applications..."
-sudo apt install curl httpie neovim git zsh docker.io gh awscli docker-ce docker-ce-cli containerd.io -y
+sudo apt install -y curl httpie neovim git zsh gh awscli
+
+# Install Docker
+echo "Installing Docker..."
+sudo apt-get install -y \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+
+# Add current user to the Docker group
+echo "Adding current user to the Docker group..."
+sudo usermod -aG docker $USER
 
 # Clone dotfiles repository
 echo "Cloning dotfiles..."
 git clone https://github.com/betogrun/dotfiles ~/dotfiles
 
 # Path for specific dotfiles
-dotfiles_path="~/dotfiles/dotfiles/windows11/wsl2/ubuntu22.04"
+dotfiles_path="$HOME/dotfiles/windows11/wsl2/ubuntu22.04"
 
 # Install Oh My Zsh without user interaction
 echo "Installing Oh My Zsh..."
@@ -42,12 +62,14 @@ echo "Installing Powerlevel10k..."
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
 echo 'source ~/powerlevel10k/powerlevel10k.zsh-theme' >>~/.zshrc
 
-# Copy Zsh and Powerlevel10k configuration from dotfiles
-echo "Configuring Zsh and Powerlevel10k from dotfiles..."
+# Copy Zsh, Powerlevel10k, and Git configuration from dotfiles
+echo "Configuring Zsh, Powerlevel10k, and Git from dotfiles..."
 rm ~/.zshrc
 cp $dotfiles_path/.zshrc ~/
 cp $dotfiles_path/.p10k.zsh ~/
-source ~/.zshrc
+cp $dotfiles_path/.gitconfig ~/
+cp -r $dotfiles_path/.git_template ~/.git_template
+cp $dotfiles_path/.gitingore_global ~/.gitignore_global
 
 # Install Tmux Plugin Manager (TPM) and copy .tmux.conf from dotfiles
 echo "Installing Tmux Plugin Manager and configuring .tmux.conf..."
@@ -59,10 +81,14 @@ echo "Installing asdf..."
 git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.0
 echo '. $HOME/.asdf/asdf.sh' >> ~/.zshrc
 echo '. $HOME/.asdf/completions/asdf.bash' >> ~/.zshrc
-source ~/.zshrc
+
+# Set Zsh as the default shell
+echo "Setting Zsh as the default shell..."
+chsh -s $(which zsh)
 
 # Post-installation instructions
 echo "Post-installation steps:"
 echo "1. Restart your terminal or log out and log back in to apply the changes."
-echo "2. If you installed new shells (like Zsh), you may need to set them as your default shell manually."
+echo "2. Open Tmux and press 'prefix + I' to install Tmux plugins."
 echo "3. Review and customize your dotfiles as needed."
+echo "4. Enjoy!"
