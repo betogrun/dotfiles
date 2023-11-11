@@ -1,0 +1,9 @@
+tags
+tags.temp
+tags.lock
+
+docker-compose-custom.yml
+
+Session.vim
+
+.tool-versions
