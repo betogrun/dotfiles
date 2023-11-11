@@ -7,13 +7,15 @@ echo " | '_ \\ / _ \\ __/ _ \\ / _\` | '__| | | | '_ \\ "
 echo " | |_) |  __/ || (_) | (_| | |  | |_| | | | |"
 echo " |_.__/ \\___|\\__\\___/ \\__, |_|   \\__,_|_| |_|"
 echo "                       __/ |                 "
+echo "                      |___/                  "
+echo " "
 
 #!/bin/bash
 
 # Script Header
-echo "# ___________________________________________"
-echo "# Running betogrun dotfiles bootstrap script"
-echo "# ___________________________________________"
+echo "#-------------------------------------------#"
+echo "# Running @betogrun dotfiles bootstrap script"
+echo "#-------------------------------------------#"
 
 # Update packages
 echo "Updating packages..."
@@ -22,6 +24,10 @@ sudo apt update && sudo apt upgrade -y
 # Install necessary applications
 echo "Installing necessary applications..."
 sudo apt install -y curl httpie neovim git zsh gh awscli
+
+# Set Zsh as the default shell
+echo "Setting Zsh as the default shell..."
+chsh -s $(which zsh)
 
 # Install Docker
 echo "Installing Docker..."
@@ -41,9 +47,20 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 echo "Adding current user to the Docker group..."
 sudo usermod -aG docker $USER
 
+# Install Docker Compose
+echo "Installing Docker Compose..."
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.6.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
 # Clone dotfiles repository
 echo "Cloning dotfiles..."
 git clone https://github.com/betogrun/dotfiles ~/dotfiles
+
+# Copy Git configuration from dotfiles
+echo "Configuring Git from dotfiles..."
+cp $dotfiles_path/.gitconfig ~/
+cp -r $dotfiles_path/.git_template ~/.git_template
+cp $dotfiles_path/.gitignore_global ~/
 
 # Path for specific dotfiles
 dotfiles_path="$HOME/dotfiles/windows11/wsl2/ubuntu22.04"
@@ -60,16 +77,21 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-m
 # Install Powerlevel10k
 echo "Installing Powerlevel10k..."
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
-echo 'source ~/powerlevel10k/powerlevel10k.zsh-theme' >>~/.zshrc
 
-# Copy Zsh, Powerlevel10k, and Git configuration from dotfiles
-echo "Configuring Zsh, Powerlevel10k, and Git from dotfiles..."
+# Copy Zsh, Powerlevel10k configuration from dotfiles
+echo "Configuring Zsh and Powerlevel10k from dotfiles..."
 rm ~/.zshrc
-cp $dotfiles_path/.zshrc ~/
+# cp $dotfiles_path/.zshrc ~/
+cp "$HOME/test/.zshrc" ~/
 cp $dotfiles_path/.p10k.zsh ~/
-cp $dotfiles_path/.gitconfig ~/
-cp -r $dotfiles_path/.git_template ~/.git_template
-cp $dotfiles_path/.gitingore_global ~/.gitignore_global
+
+# Add Powerlevel10k theme source to .zshrc
+echo 'source ~/powerlevel10k/powerlevel10k.zsh-theme' >> ~/.zshrc
+
+# Install Tmux Plugin Manager (TPM) and copy .tmux.conf from dotfiles
+echo "Installing Tmux Plugin Manager and configuring .tmux.conf..."
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+cp $dotfiles_path/.tmux.conf ~/
 
 # Install Tmux Plugin Manager (TPM) and copy .tmux.conf from dotfiles
 echo "Installing Tmux Plugin Manager and configuring .tmux.conf..."
@@ -81,10 +103,6 @@ echo "Installing asdf..."
 git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.0
 echo '. $HOME/.asdf/asdf.sh' >> ~/.zshrc
 echo '. $HOME/.asdf/completions/asdf.bash' >> ~/.zshrc
-
-# Set Zsh as the default shell
-echo "Setting Zsh as the default shell..."
-chsh -s $(which zsh)
 
 # Post-installation instructions
 echo "Post-installation steps:"
