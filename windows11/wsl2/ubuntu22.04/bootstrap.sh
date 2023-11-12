@@ -25,10 +25,6 @@ sudo apt update && sudo apt upgrade -y
 echo "Installing necessary applications..."
 sudo apt install -y curl httpie neovim git zsh gh awscli
 
-# Set Zsh as the default shell
-echo "Setting Zsh as the default shell..."
-chsh -s $(which zsh)
-
 # Install Docker
 echo "Installing Docker..."
 sudo apt-get install -y \
@@ -69,6 +65,10 @@ cp $dotfiles_path/.gitconfig ~/
 cp $dotfiles_path/.gitignore_global ~/
 cp -r $dotfiles_path/.git_template ~/.git_template
 chmod -R +x ~/.git_template/hooks
+
+# Set Zsh as the default shell
+echo "Setting Zsh as the default shell..."
+sudo chsh -s $(which zsh) $(whoami)
 
 # Install Oh My Zsh without user interaction
 echo "Installing Oh My Zsh..."
