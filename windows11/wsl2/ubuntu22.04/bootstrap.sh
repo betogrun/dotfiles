@@ -48,6 +48,12 @@ echo "Installing Docker Compose..."
 sudo curl -L "https://github.com/docker/compose/releases/download/v2.6.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
+# Configure iptables to use iptables-legacy for Docker compatibility on Ubuntu 22.04
+# Docker requires iptables-legacy due to compatibility issues with nftables, the default on Ubuntu 22.04.
+# Reference: https://crapts.org/2022/05/15/install-docker-in-wsl2-with-ubuntu-22-04-lts/
+echo "Set iptables to use iptables-legacy for Docker compatibility on Ubuntu 22.04."
+sudo update-alternatives --set iptables /usr/sbin/iptables-legacy
+
 # Install asdf
 echo "Installing asdf..."
 git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.13.1
