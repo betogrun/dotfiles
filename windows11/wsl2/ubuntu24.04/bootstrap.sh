@@ -36,7 +36,6 @@ sudo apt install -y \
     git \
     zsh \
     gh \
-    awscli \
     tmux \
     build-essential \
     unzip \
@@ -56,7 +55,7 @@ fi
 
 # Install asdf
 echo "Installing asdf..."
-git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.13.1
+git clone https://github.com/asdf-vm/asdf.git ~/.asdf
 
 # Clone or update dotfiles repository
 echo "Setting up dotfiles..."
