@@ -23,6 +23,10 @@ create_backup() {
     fi
 }
 
+# The Ubuntu 24.04 neovim package is too old for LazyVim
+echo "Adding the Neovim PPA..."
+sudo add-apt-repository -y ppa:neovim-ppa/unstable
+
 # Update packages
 echo "Updating packages..."
 sudo apt update && sudo apt upgrade -y
@@ -149,6 +153,14 @@ echo "Installing Tmux plugins..."
 "$TPM_PATH/bin/install_plugins"
 "$TPM_PATH/bin/update_plugins" all
 
+# Link the Neovim config (LazyVim), so local changes land in the repo
+echo "Linking Neovim configuration..."
+mkdir -p ~/.config
+if [ -d ~/.config/nvim ] && [ ! -L ~/.config/nvim ]; then
+    mv ~/.config/nvim ~/.config/nvim.backup.$(date +%Y%m%d-%H%M%S)
+fi
+ln -sfn "$dotfiles_path/.config/nvim" ~/.config/nvim
+
 # Check GitHub CLI authentication
 if command -v gh &> /dev/null && ! gh auth status &> /dev/null; then
     echo "GitHub CLI is not authenticated."
@@ -170,3 +182,4 @@ echo "Additional recommendations:"
 echo "- Configure Git user info: git config --global user.name 'Your Name'"
 echo "- Install languages via asdf (Node.js, Ruby, Python, etc.)"
 echo "- Configure Windows Terminal settings for better WSL2 integration"
+echo "- Install a Nerd Fonts v3 font for the Neovim icons (see the README); plugins install on the first nvim start"
